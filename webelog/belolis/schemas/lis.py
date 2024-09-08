@@ -1,7 +1,7 @@
 from typing import Any, Union, Optional
 from pydantic import BaseModel, Field
 
-from webelog.base import TimeStampedModelSchema
+from webelog.db.base import TimeStampedModelSchema
 
 LOGICAL_FILE_ATTR = [
     'api_curve_class', 'api_curve_type', 'api_log_type',

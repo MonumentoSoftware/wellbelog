@@ -1,7 +1,7 @@
 from typing import Any, Union, Optional
 from pydantic import Field
 
-from mongoDriver.base import TimeStampedModelSchema
+from webelog.db.base import TimeStampedModelSchema
 
 
 class FrameChannel(TimeStampedModelSchema):

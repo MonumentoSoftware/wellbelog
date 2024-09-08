@@ -1,1 +1,0 @@
-from .gamma import GammaPlot
