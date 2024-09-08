@@ -1,11 +1,19 @@
 from typing import Any, Optional
 from pydantic import BaseModel, Field
 
-from mongoDriver.base import TimeStampedModelSchema
+from webelog.db.base import TimeStampedModelSchema
 
 
 class LasDataframe(TimeStampedModelSchema):
+    """
+    A class that represents the data of a LAS file.
 
+    Attributes:
+        file_name (str): The name of the file.
+        data (str): The data of the curve.
+        columns (list[str]): The columns of the curve.
+        shape (tuple): The shape of the curve.
+    """
     file_name: str = Field(..., description="The name of the file.")
     data: str = Field(..., description="The data of the curve.")
     columns: list[str] = Field(..., description="The columns of the curve.")
@@ -47,6 +55,11 @@ class LasFileModel(TimeStampedModelSchema):
 
     data: Optional[LasDataframe] = Field(None, description="The data of the file.")
 
-    @property
-    def logical_files_count(self) -> int:
-        return len(self.logical_files)
+    def __str__(self) -> str:
+        return f"LasFileModel: {self.file_name}"
+
+    def column_search(self, column: str) -> Optional[LasCurvesSpecs]:
+        for spec in self.specs:
+            if spec.mnemonic == column:
+                return spec
+        return None
