@@ -1,6 +1,6 @@
 ![icon](icon.png)
 # Well Belo Log
-[![Python Package Test](https://github.com/MonumentoSoftware/wellbelog/actions/workflows/push/badge.svg)](https://github.com/MonumentoSoftware/wellbelog/actions/workflows/push.yml)
+[![Python Package Test](https://github.com/MonumentoSoftware/wellbelog/actions/workflows/push.yml/badge.svg)](https://github.com/MonumentoSoftware/wellbelog/actions/workflows/push.yml)
 
 The aim of Well Belo Log is to ease the workflow of dealing with large ammounts of files. It's quite common the need to restart your kernel while trying to acess some data in a closed file. Or maybe the boiler code is just too much, to merge the logical files, extract the frames... Anyway, enjoy...
 
