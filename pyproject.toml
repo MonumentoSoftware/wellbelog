@@ -1,12 +1,25 @@
-[build-system]
-requires = [
-    "setuptools>=48",
-    "setuptools_scm[toml] >= 4, <6",
-    "setuptools_scm_git_archive",
-    "wheel >= 0.29.0",
-]
-build-backend = "setuptools.build_meta"
+[tool.poetry]
+name = "wellbelog"
+version = "0.0.1"
+description = "A python package to work with digital well logs formats, like .las, .lis and .dlis"
+authors = ["pedrokpaxo <pedro@monumentosoftware.com.br>"]
+license = "MIT"
+readme = "Readme.md"
 
-[tool.setuptools_scm]
-write_to = "GeoLegacy.py"
-git_describe_command = "git describe --dirty --tags --long --match v* --first-parent"
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^2.2.2"
+dlisio = "^1.0.2"
+lasio = "^0.31"
+pydantic = "^2.9.1"
+rich = "^13.8.1"
+pymongo = "^4.8.0"
+shapely = "^2.0.6"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

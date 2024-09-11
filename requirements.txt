@@ -1,7 +1,0 @@
-alive-progress==3.1.1
-dlisio==0.3.7
-lasio==0.30
-numpy==1.24.3
-pandas==2.0.1
-pymongo==4.3.3
-rich==13.4.2
