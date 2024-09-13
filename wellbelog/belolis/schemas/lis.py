@@ -1,7 +1,10 @@
 from typing import Any, Union, Optional
+
 from pydantic import BaseModel, Field
+from rich.table import Table
 
 from wellbelog.db.base import TimeStampedModelSchema, DataframeSchema
+from wellbelog.utils.console import console
 
 LOGICAL_FILE_ATTR = [
     'api_curve_class', 'api_curve_type', 'api_log_type',
@@ -92,7 +95,7 @@ class LogicalLisFileModel(TimeStampedModelSchema):
     Attributes:
         file_name (str): The name of the file.
         logical_id (str): The id of the logical file.
-        curves_data (list[FrameLisCurves]): The frames of the file.
+        frames (list[FrameLisCurves]): The frames of the file.
         error (bool): If the file has any error during opening.
         error_message (str): The error exception if any.
         well_site_specs (LisLogicalWellSiteSpec): The well site specifications.
@@ -102,7 +105,7 @@ class LogicalLisFileModel(TimeStampedModelSchema):
 
     file_name: str = Field(..., description="The name of the file.")
     logical_id: Optional[Any] = Field(..., description="The id of the logical file.")
-    curves_data: list[FrameLisCurves] = Field(default_factory=list, description="The frames of the file.")
+    frames: list[FrameLisCurves] = Field(default_factory=list, description="The frames of the file.")
     curves_names: list[str] = Field(default_factory=list, description="The names of the curves.")
     error: bool = Field(False, description="If the file has any error during opening.")
     error_message: Optional[str] = Field(None, description="The error exception if any.")
@@ -112,13 +115,26 @@ class LogicalLisFileModel(TimeStampedModelSchema):
 
     @property
     def frames_count(self) -> int:
-        return len(self.curves_data)
+        return len(self.frames)
 
     def get_curve(self, index=0) -> FrameLisCurves:
         assert index < self.frames_count, f"Index {index} is out of range. The file has {self.frames_count} frames."
         if self.frames_count == 1:
-            return self.curves_data[0]
-        return self.curves_data[index]
+            return self.frames[0]
+        return self.frames[index]
+
+    def table_view(self) -> Table:
+        """
+        Create a table view of the file.
+        """
+        table = Table(title=self.file_name)
+        table.add_column("Logical File ID", style="cyan")
+        table.add_column("Frame count", style="magenta")
+        table.add_column("Curves", style="green")
+        table.add_column("Error", style="red")
+        table.add_row(str(self.logical_id), str(self.frames_count), str(self.curves_names), str(self.error))
+        console.print(table)
+        return table
 
 
 class PhysicalLisFileModel(TimeStampedModelSchema):
@@ -149,6 +165,19 @@ class PhysicalLisFileModel(TimeStampedModelSchema):
     def get_curves_names(self) -> list[str]:
         curves = []
         for logical_file in self.logical_files:
-            for frame in logical_file.curves_data:
+            for frame in logical_file.frames:
                 curves.append(frame.file_name)
         return curves
+
+    def logical_files_table(self) -> Table:
+        """
+        Get a table view of the logical files.
+        """
+        table = Table(title=self.file_name)
+        table.add_column("File Name", style="green")
+        table.add_column("Curves", style="cyan")
+        table.add_column("Error", style="red")
+        for file in self.logical_files:
+            table.add_row(file.file_name, str(file.curves_names), str(file.error))
+        console.print(table)
+        return table

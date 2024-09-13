@@ -101,7 +101,7 @@ class LisReader:
                         logical_file_id=logical_file_id,
                         data=json.loads(curve.to_json(orient="records")),
                     )
-                    logical_file_model.curves_data.append(curve_model)
+                    logical_file_model.frames.append(curve_model)
                     for curve_name in curve.columns:
                         curves_set_names.add(curve_name)
                 logical_file_model.curves_names = list(curves_set_names)

@@ -4,7 +4,7 @@ from dlisio import lis
 import pandas as pd
 
 
-def read_lis_file(path_to_file: str) -> lis.PhysicalFile:
+def read_lis_file(path_to_file: str) -> Union[lis.PhysicalFile, Exception]:
     """
     Read a LIS file and return a list of LogicalFile objects.
 
@@ -57,29 +57,31 @@ def get_physical_lis_specs(physical_file: lis.LogicalFile, attrs: list[str]) -> 
         attrs (list[str]): List of attributes to be extracted.
 
     Returns:
-        _type_: _description_
+        list[dict[str, str]]: A list of dictionaries, where each dictionary represents a block of attributes.
+            Each dictionary contains the specified attributes as keys and their corresponding values as values.
     """
     result = []
     spec = get_lis_data_spec(physical_file)
     if not spec:
         return result
     if isinstance(spec, lis.DataFormatSpec):
-        for block in spec.specs:
+        specs = [spec]
+    elif isinstance(spec, list):
+        specs = spec
+    else:
+        return result
+
+    for s in specs:
+        for block in s.specs:
             block_dict = {}
             for atr in attrs:
                 if hasattr(block, atr):
-                    block_dict[atr] = getattr(block, atr).strip() if isinstance(
-                        getattr(block, atr), str) else getattr(block, atr)
-                    result.append(block_dict)
-    if isinstance(spec, list):
-        for s in spec:
-            for block in s.specs:
-                block_dict = {}
-                for atr in attrs:
-                    if hasattr(block, atr):
-                        block_dict[atr] = getattr(block, atr).strip() if isinstance(
-                            getattr(block, atr), str) else getattr(block, atr)
-                        result.append(block_dict)
+                    value = getattr(block, atr)
+                    if isinstance(value, str):
+                        value = value.strip()
+                    block_dict[atr] = value
+            result.append(block_dict)
+
     result = [dict(t) for t in {tuple(d.items()) for d in result}]
     return result
 

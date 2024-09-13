@@ -17,6 +17,7 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
   - [Working with Dlis files](#working-with-dlis-files)
     - [Searching for Dlis Files](#searching-for-dlis-files)
     - [Reading Dlis Files](#reading-dlis-files)
+    - [Table View](#table-view)
     - [to dataframe](#to-dataframe)
     - [to csv](#to-csv)
     - [to excel](#to-excel)
@@ -28,6 +29,7 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
   - [Working with Las files](#working-with-las-files)
     - [Searching for Las Files](#searching-for-las-files)
     - [Reading Las Files](#reading-las-files)
+    - [LasFile Table](#lasfile-table)
     - [Frame data to dataframe](#frame-data-to-dataframe)
     - [Frame data to csv](#frame-data-to-csv)
     - [Frame data to excel](#frame-data-to-excel)
@@ -37,6 +39,7 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
   - [Working with Lis files](#working-with-lis-files)
     - [Searching for Lis Files](#searching-for-lis-files)
     - [Reading Lis Files](#reading-lis-files)
+    - [Table View](#table-view-1)
     - [Frame data to dataframe](#frame-data-to-dataframe-1)
     - [Frame data to csv](#frame-data-to-csv-1)
     - [Frame data to excel](#frame-data-to-excel-1)
@@ -132,6 +135,26 @@ from webelog.belodlis import DlisReader
 
 reader = DlisReader()
 dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+```
+### Table View
+Prints a table with the file information.
+```python
+from webelog.belodlis import DlisReader
+
+reader = DlisReader()
+dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+dlis_file.table_view()
+```
+Will print something like this:
+```bash
+                           1PIR1AL_conv_ccl_canhoneio.dlis
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ File Name                       ┃ Curves                                   ┃ Error ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ 1PIR1AL_conv_ccl_canhoneio.dlis │ ['TDEP', 'MINMK', 'LSPD', 'LTEN', 'CCL'] │ False │
+│ 1PIR1AL_conv_ccl_canhoneio.dlis │ ['TDEP', 'MINMK', 'LSPD', 'LTEN', 'CCL'] │ False │
+│ 1PIR1AL_conv_ccl_canhoneio.dlis │ ['TDEP', 'MINMK', 'LSPD', 'LTEN', 'CCL'] │ False │
+└─────────────────────────────────┴──────────────────────────────────────────┴───────┘
 ```
 ### to dataframe 
 To convert the data to a pandas dataframe.
@@ -259,6 +282,26 @@ from webelog.belolas import LasReader
 reader = LasReader()
 las_file = reader.process_las_file('path/to/your/file.las')
 ```
+
+### LasFile Table
+Prints a table with the file information.
+```python
+from webelog.belolas import LasReader
+
+reader = LasReader()
+las_file = reader.process_las_file('path/to/your/file.las')
+las_file.table_view()
+```
+
+```bash
+                                                       1-MPE-3-AL_hals-dslt-tdd-hgns-gr_resistividade_repetida.las
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ File Name                                                   ┃ Curves                                                                                          ┃ Error ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ 1-MPE-3-AL_hals-dslt-tdd-hgns-gr_resistividade_repetida.las │ ['DEPT', 'DT', 'GR', 'HCAL', 'HDRA', 'HLLD', 'HLLS', 'HRM', 'HSO', 'HTEM', 'ITT', 'NPHI',       │ False │
+│                                                             │ 'PEFZ', 'RHOZ']                                                                                 │       │
+└─────────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────┴───────┘
+```
 ### Frame data to dataframe
 To convert the data to a pandas dataframe.
 
@@ -360,6 +403,25 @@ from webelog.belolas import LisReader
 
 reader = LisReader()
 lis_file = reader.process_physical_file('path/to/your/file.lis')
+```
+### Table View
+Prints a table with the file information.
+```python
+from webelog.belolas import LisReader
+
+reader = LisReader()
+lis_file = reader.process_lis_file('path/to/your/file.lis')
+lis_file.table_view()
+```
+Will print something like this:
+```bash
+                                                            1-MPE-3-AL.lis
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ File Name      ┃ Curves                                                                                                     ┃ Error ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ 1-MPE-3-AL.lis │ []                                                                                                         │ False │
+│ 1-MPE-3-AL.lis │ ['SP', 'SN', 'TBHV', 'DIR', 'ABHV', 'DEPT', 'DT', 'GR', 'ITT', 'TT4', 'TT1', 'YCAL', 'XCAL', 'TT3', 'TT2'] │ False │
+└────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────┴───────┘
 ```
 
 ### Frame data to dataframe
