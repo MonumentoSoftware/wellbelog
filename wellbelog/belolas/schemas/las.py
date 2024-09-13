@@ -1,10 +1,10 @@
 from typing import Any, Optional
 from pydantic import BaseModel, Field
 
-from wellbelog.db.base import TimeStampedModelSchema
+from wellbelog.db.base import TimeStampedModelSchema, DataframeSchema
 
 
-class LasDataframe(TimeStampedModelSchema):
+class LasDataframe(DataframeSchema):
     """
     A class that represents the data of a LAS file.
 
@@ -15,7 +15,6 @@ class LasDataframe(TimeStampedModelSchema):
         shape (tuple): The shape of the curve.
     """
     file_name: str = Field(..., description="The name of the file.")
-    data: str = Field(..., description="The data of the curve.")
     columns: list[str] = Field(..., description="The columns of the curve.")
     shape: tuple = Field(..., description="The shape of the curve.")
 
