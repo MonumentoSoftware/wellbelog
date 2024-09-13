@@ -143,7 +143,7 @@ from webelog.belodlis import DlisReader
 
 reader = DlisReader()
 dlis_file = reader.process_physical_file('path/to/your/file.dlis')
-dlis_file.table_view()
+dlis_file.logical_files_table()
 ```
 Will print something like this:
 ```bash
@@ -411,7 +411,7 @@ from webelog.belolas import LisReader
 
 reader = LisReader()
 lis_file = reader.process_lis_file('path/to/your/file.lis')
-lis_file.table_view()
+lis_file.logical_files_table()
 ```
 Will print something like this:
 ```bash
