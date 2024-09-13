@@ -9,6 +9,11 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
 - [Well Belo Log](#well-belo-log)
 - [Installation](#installation)
 - [Usage](#usage)
+  - [Dataframes](#dataframes)
+  - [Ploting Curves](#ploting-curves)
+    - [Plotting all curves](#plotting-all-curves)
+      - [Las Example](#las-example)
+      - [Lis Example](#lis-example)
   - [Working with Dlis files](#working-with-dlis-files)
     - [Searching for Dlis Files](#searching-for-dlis-files)
     - [Reading Dlis Files](#reading-dlis-files)
@@ -61,6 +66,49 @@ The main objective of WellBeLog is to ease the workflow when working with .dlis,
 - DlisReader: to read .dlis files
 - LasReader: to read .las files
 - LisReader: to read .lis files
+
+## Dataframes
+All modules to deal with the files extensions, have a DataframeSchema class that can be generate pandas Dataframes.
+
+- dlis has a FrameDataframe class
+- las has a LasDataframe class
+- lis has a CurveDataframe class
+
+## Ploting Curves
+We intend to expand this feature, ut for now we have a generic funtion to plot all curves.
+
+### Plotting all curves
+The plot_all_curves function receives a pandas dataframe, the depth column name, and the file name. It returns a plotly figure.
+
+![plot_all_curves](./images/example_plot_01.png)
+
+#### Las Example
+```python
+from webelog.plotters.general import plot_all_curves
+from webelog.belolas import LasReader
+
+# Acessing the data
+reader = LasReader()
+las_file = reader.process_las_file('path/to/your/file.las')
+data = las_file.data
+df = data.as_df()
+figure = plot_all_curves(df, 'DEPT', las_file.file_name)
+figure.show()
+```
+
+#### Lis Example
+```python
+from webelog.plotters.general import plot_all_curves
+from webelog.belolas import LisReader
+
+# Acessing the data
+reader = LisReader()
+lis_file = reader.process_lis_file('path/to/your/file.lis')
+curve_1 = file.logical_files[2].get_curve()
+df = curve_1.as_df()
+fig = plot_all_curves(df, 'DEPT', f'{file.file_name}-{file.logical_files[0].logical_id}.png')
+fig.show()
+```
 
 ## Working with Dlis files
 In the [Belodlis](./wellbelog/belodlis/) folder you can find all the tools to work with Dlis files.
