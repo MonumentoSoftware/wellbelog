@@ -44,13 +44,13 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
 You can install the package using pip directly from the github repository:
 
 ```bash
-pip install https://github.com/MonumentoSoftware/webelog
+pip install git+https://github.com/MonumentoSoftware/wellbelog
 ```
 
 or you can clone the repository and install it locally:
 
 ```bash
-git clone https://github.com/MonumentoSoftware/webelog
+git clone https://github.com/MonumentoSoftware/wellbelog
 cd webelog
 pip install .
 ```
