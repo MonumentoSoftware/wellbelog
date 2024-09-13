@@ -12,6 +12,8 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
   - [Dataframes](#dataframes)
   - [Ploting Curves](#ploting-curves)
     - [Plotting all curves](#plotting-all-curves)
+      - [Las Example](#las-example)
+      - [Lis Example](#lis-example)
   - [Working with Dlis files](#working-with-dlis-files)
     - [Searching for Dlis Files](#searching-for-dlis-files)
     - [Reading Dlis Files](#reading-dlis-files)
@@ -78,6 +80,9 @@ We intend to expand this feature, ut for now we have a generic funtion to plot a
 ### Plotting all curves
 The plot_all_curves function receives a pandas dataframe, the depth column name, and the file name. It returns a plotly figure.
 
+![plot_all_curves](./images/example_plot_01.png)
+
+#### Las Example
 ```python
 from webelog.plotters.general import plot_all_curves
 from webelog.belolas import LasReader
@@ -89,6 +94,20 @@ data = las_file.data
 df = data.as_df()
 figure = plot_all_curves(df, 'DEPT', las_file.file_name)
 figure.show()
+```
+
+#### Lis Example
+```python
+from webelog.plotters.general import plot_all_curves
+from webelog.belolas import LisReader
+
+# Acessing the data
+reader = LisReader()
+lis_file = reader.process_lis_file('path/to/your/file.lis')
+curve_1 = file.logical_files[2].get_curve()
+df = curve_1.as_df()
+fig = plot_all_curves(df, 'DEPT', f'{file.file_name}-{file.logical_files[0].logical_id}.png')
+fig.show()
 ```
 
 ## Working with Dlis files

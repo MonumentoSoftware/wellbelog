@@ -94,7 +94,6 @@ class LisReader:
                 lis_logical_specs = LisLogicalSpecs(file_name=file_name.name, logical_id=logical_file_id, specs_dicts=physical_specs)  # noqa
                 logical_file_model.specs = lis_logical_specs
                 curves = get_curves(logical_file)
-                self.logger.info(f"Curves: {len(curves)}")
                 curves_set_names = set()
                 for curve in curves:
                     curve_model = FrameLisCurves(

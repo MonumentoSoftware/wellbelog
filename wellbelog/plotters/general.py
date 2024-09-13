@@ -4,7 +4,7 @@ from matplotlib.figure import Figure
 from pandas import DataFrame
 
 
-def plot_all_curves(data: DataFrame, depth_column: str = 'DEPT', figsize=(12, 8), title='Geological Curves') -> Figure:
+def plot_all_curves(data: DataFrame, depth_column: str = 'DEPT', title='Geological Curves', figsize=(15, 10)) -> Figure:
     """
     Function to create subplots for each column with depth as index.
 
@@ -18,9 +18,8 @@ def plot_all_curves(data: DataFrame, depth_column: str = 'DEPT', figsize=(12, 8)
     columns = [col for col in data.columns if col != depth_column]
     num_plots = len(columns)
     # Create subplots
-    fig, axes = plt.subplots(nrows=1, ncols=num_plots, figsize=figsize, sharey=True)
+    fig, axes = plt.subplots(nrows=1, ncols=num_plots, sharey=True, figsize=figsize)
     axes: list[Axes]
-
     # TODO Find a a better way to deal with color cycling
     # Colors for the plots (cycle through colors if there are more columns than colors)
     colors = ['green', 'red', 'blue', 'black', 'purple']
@@ -38,5 +37,4 @@ def plot_all_curves(data: DataFrame, depth_column: str = 'DEPT', figsize=(12, 8)
     fig.suptitle(title)
     # Adjust layout to make room for the title
     plt.tight_layout(rect=[0, 0, 1, 0.96])
-    plt.show()
     return fig
