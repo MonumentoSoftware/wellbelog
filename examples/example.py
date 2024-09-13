@@ -8,4 +8,4 @@ if __name__ == '__main__':
     reader = LisReader()
     file = reader.process_physical_file(PATH_TO_FILE)
     print(file.file_name)
-    print(file)
+    print(file.logical_files_table())

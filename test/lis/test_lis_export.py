@@ -17,7 +17,7 @@ def test_lis_to_csv():
     assert logical_file.file_name == '1-MPE-3-AL.lis'
     assert logical_file.error is False
 
-    curve_data = logical_file.curves_data[1]
+    curve_data = logical_file.frames[1]
     with tempfile.TemporaryDirectory() as tmpdirname:
         csv_path = f'{tmpdirname}/1-MPE-3-AL.csv'
         curve_data.to_csv(csv_path)

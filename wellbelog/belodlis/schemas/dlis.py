@@ -1,6 +1,6 @@
+from functools import cached_property
 from typing import Any, Union, Optional
 
-import pandas as pd
 from pydantic import Field
 from rich.table import Table
 
@@ -112,6 +112,16 @@ class LogicalFileModel(TimeStampedModelSchema):
     def frames_count(self) -> int:
         return len(self.frames)
 
+    @cached_property
+    def curves_names(self) -> list[str]:
+        """"
+        Returns a set with the names of the curves in the file.
+        """
+        if not self.frames or self.error:
+            return None
+        curves = [channel.name for frame in self.frames for channel in frame.channels]
+        return list(set(curves))
+
     def get_frame(self, index: int = 0) -> FrameModel:
         """
         Get the frame by index.
@@ -130,8 +140,9 @@ class LogicalFileModel(TimeStampedModelSchema):
         table.add_column("Logical File ID", style="cyan")
         table.add_column("File Name", style="magenta")
         table.add_column("Frames", style="green")
+        table.add_column("Curves", style="cyan")
         table.add_column("Error", style="red")
-        table.add_row(str(self.logical_id), self.file_name, str(self.frames_count), str(self.error))
+        table.add_row(str(self.logical_id), self.file_name, str(self.frames_count), str(self.curves_names), str(self.error))
         console.print(table)
         return table
 
@@ -159,6 +170,19 @@ class PhysicalFileModel(TimeStampedModelSchema):
     @property
     def logical_files_count(self) -> int:
         return len(self.logical_files)
+
+    def logical_files_table(self) -> Table:
+        """
+        Get a table view of the logical files.
+        """
+        table = Table(title=self.file_name)
+        table.add_column("File Name", style="green")
+        table.add_column("Curves", style="cyan")
+        table.add_column("Error", style="red")
+        for file in self.logical_files:
+            table.add_row(file.file_name, str(file.curves_names), str(file.error))
+        console.print(table)
+        return table
 
     def curves_names(self) -> list[str]:
         """"

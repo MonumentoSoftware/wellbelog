@@ -1,7 +1,11 @@
+from functools import cached_property
 from typing import Any, Optional
+
 from pydantic import BaseModel, Field
+from rich.table import Table
 
 from wellbelog.db.base import TimeStampedModelSchema, DataframeSchema
+from wellbelog.utils.console import console
 
 
 class LasDataframe(DataframeSchema):
@@ -62,3 +66,19 @@ class LasFileModel(TimeStampedModelSchema):
             if spec.mnemonic == column:
                 return spec
         return None
+
+    @cached_property
+    def curves_names(self) -> list[str]:
+        return [spec.mnemonic for spec in self.specs]
+
+    def table_view(self) -> Table:
+        """
+        Create a table view of the file.
+        """
+        table = Table(title=self.file_name)
+        table.add_column("File Name", style="green")
+        table.add_column("Curves", style="cyan")
+        table.add_column("Error", style="red")
+        table.add_row(self.file_name, str(self.curves_names), str(self.error),)
+        console.print(table)
+        return table
