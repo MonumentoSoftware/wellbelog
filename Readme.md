@@ -4,10 +4,7 @@
 
 The aim of Well Belo Log is to ease the workflow of dealing with large ammounts of files. It's quite common the need to restart your kernel while trying to acess some data in a closed file. Or maybe the boiler code is just too much, to merge the logical files, extract the frames... Anyway, enjoy...
 
-<div style="display: flex; justify-content: space-around; align-items: center; gap: 20px; flex-wrap: wrap;">
-  <img src="./images/images.png" alt="Lagese logo" style=" height: auto;">
-  <img src="./images/Logo-i-Litpeg-Horizontal-Colorida-vinho-e-chumbo-com-fundo-transparente.png" alt="Monumento logo" style="max-width: 300px; height: auto;">
-</div>
+
 
 - [Well Belo Log](#well-belo-log)
 - [Installation](#installation)
@@ -38,6 +35,8 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
     - [Frame data to dataframe](#frame-data-to-dataframe-1)
     - [Frame data to csv](#frame-data-to-csv-1)
     - [Frame data to excel](#frame-data-to-excel-1)
+- [Developing the project](#developing-the-project)
+- [Academic Sponsors](#academic-sponsors)
 
 
 # Installation
@@ -356,3 +355,31 @@ lis_file.logical_files[0].curves_data[0].to_excel('path/to/your/file.xlsx')
 # NOTE the function returns the path to the file.
 path_to_excel = lis_file.logical_files[0].curves_data[0].to_excel('path/to/your/file.xlsx')
 ```
+# Developing the project
+To develop the project, you can clone the repository and install the requirements:
+
+```bash
+git clone https://github.com/MonumentoSoftware/wellbelog
+cd wellbelog
+poetry install
+```
+You can develop the project by creating new classes, methods, etc.
+Then you can run examples inside the poetry shell, let's say the dlis_example.py:
+
+```bash
+poetry shell
+python examples/dlis_example.py
+```
+
+Then you can run the tests:
+
+```bash
+poetry run pytest
+```
+
+# Academic Sponsors
+Thus project was developed to support the research of [LAGESE](https://sites.ufpe.br/litpeg/lagese_equipe/) - LaboratórioLaboratório de Geologia Sedimentar e Ambiental, da Universidade Federal de Pernambuco (UFPE) , located on the [LITPEG](https://www.ufpe.br/litpeg) - Instituto de Pesquisa em Petróleo e Energia.
+<div style="display: flex;flex-direction:row; justify-content: space-around; align-items: center; gap: 20px; flex-wrap: wrap;">
+  <img src="./images/images.png" alt="Lagese logo" style=" max-width: 150px;height: auto;">
+  <img src="./images/Logo-i-Litpeg-Horizontal-Colorida-vinho-e-chumbo-com-fundo-transparente.png" alt="Monumento logo" style="max-width: 150px; height: auto;">
+</div>
