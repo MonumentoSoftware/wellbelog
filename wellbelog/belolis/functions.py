@@ -4,7 +4,7 @@ from dlisio import lis
 import pandas as pd
 
 
-def read_lis_file(path_to_file: str) -> list[lis.LogicalFile]:
+def read_lis_file(path_to_file: str) -> lis.PhysicalFile:
     """
     Read a LIS file and return a list of LogicalFile objects.
 
@@ -16,8 +16,8 @@ def read_lis_file(path_to_file: str) -> list[lis.LogicalFile]:
     """
     try:
         return lis.load(path_to_file)
-    except Exception:
-        return Exception
+    except Exception as e:
+        return e
 
 
 def parse_lis_physical_file(file: lis.PhysicalFile) -> list[lis.LogicalFile]:
@@ -61,12 +61,25 @@ def get_physical_lis_specs(physical_file: lis.LogicalFile, attrs: list[str]) -> 
     """
     result = []
     spec = get_lis_data_spec(physical_file)
-    for block in spec.specs:
-        block_dict = {}
-        for atr in attrs:
-            if hasattr(block, atr):
-                block_dict[atr] = getattr(block, atr).strip() if isinstance(getattr(block, atr), str) else getattr(block, atr)
-                result.append(block_dict)
+    if not spec:
+        return result
+    if isinstance(spec, lis.DataFormatSpec):
+        for block in spec.specs:
+            block_dict = {}
+            for atr in attrs:
+                if hasattr(block, atr):
+                    block_dict[atr] = getattr(block, atr).strip() if isinstance(
+                        getattr(block, atr), str) else getattr(block, atr)
+                    result.append(block_dict)
+    if isinstance(spec, list):
+        for s in spec:
+            for block in s.specs:
+                block_dict = {}
+                for atr in attrs:
+                    if hasattr(block, atr):
+                        block_dict[atr] = getattr(block, atr).strip() if isinstance(
+                            getattr(block, atr), str) else getattr(block, atr)
+                        result.append(block_dict)
     result = [dict(t) for t in {tuple(d.items()) for d in result}]
     return result
 
@@ -99,7 +112,7 @@ def get_lis_wellsite_components(logical_file: lis.LogicalFile) -> list[dict]:
     return file_records
 
 
-def get_curves(logical_file: lis.LogicalFile) -> pd.DataFrame:
+def get_curves(logical_file: lis.LogicalFile) -> list[pd.DataFrame]:
     """
     Get the curves of a LIS file.
 
@@ -120,7 +133,7 @@ def get_curves(logical_file: lis.LogicalFile) -> pd.DataFrame:
                 data = lis.curves(logical_file, format_spec)
                 df = pd.DataFrame(data)
                 df.columns = df.columns.str.strip()
-                return df
+                return [df]
         else:
             dfs = []
             for format_spec in format_specs:

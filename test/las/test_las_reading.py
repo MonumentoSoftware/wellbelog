@@ -1,7 +1,7 @@
 from pathlib import Path
 from wellbelog.belolas.reader import LasReader
 
-folder_path = Path(__file__).parent / 'test_files'
+folder_path = Path(__file__).parent.parent / 'test_files'
 
 
 def test_search_files():

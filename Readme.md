@@ -4,7 +4,10 @@
 
 The aim of Well Belo Log is to ease the workflow of dealing with large ammounts of files. It's quite common the need to restart your kernel while trying to acess some data in a closed file. Or maybe the boiler code is just too much, to merge the logical files, extract the frames... Anyway, enjoy...
 
-
+<div style="display: flex; justify-content: space-around; align-items: center; gap: 20px; flex-wrap: wrap;">
+  <img src="./images/images.png" alt="Lagese logo" style=" height: auto;">
+  <img src="./images/Logo-i-Litpeg-Horizontal-Colorida-vinho-e-chumbo-com-fundo-transparente.png" alt="Monumento logo" style="max-width: 300px; height: auto;">
+</div>
 
 - [Well Belo Log](#well-belo-log)
 - [Installation](#installation)
@@ -12,6 +15,9 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
   - [Working with Dlis files](#working-with-dlis-files)
     - [Searching for Dlis Files](#searching-for-dlis-files)
     - [Reading Dlis Files](#reading-dlis-files)
+    - [to dataframe](#to-dataframe)
+    - [to csv](#to-csv)
+    - [to excel](#to-excel)
     - [Dlis File Models](#dlis-file-models)
       - [PhysicalFileModel](#physicalfilemodel)
       - [LogicalFileModel](#logicalfilemodel)
@@ -20,10 +26,18 @@ The aim of Well Belo Log is to ease the workflow of dealing with large ammounts 
   - [Working with Las files](#working-with-las-files)
     - [Searching for Las Files](#searching-for-las-files)
     - [Reading Las Files](#reading-las-files)
+    - [Frame data to dataframe](#frame-data-to-dataframe)
+    - [Frame data to csv](#frame-data-to-csv)
+    - [Frame data to excel](#frame-data-to-excel)
     - [Las File Models](#las-file-models)
+      - [LasFileModel](#lasfilemodel)
+      - [LasDataframe](#lasdataframe)
   - [Working with Lis files](#working-with-lis-files)
     - [Searching for Lis Files](#searching-for-lis-files)
     - [Reading Lis Files](#reading-lis-files)
+    - [Frame data to dataframe](#frame-data-to-dataframe-1)
+    - [Frame data to csv](#frame-data-to-csv-1)
+    - [Frame data to excel](#frame-data-to-excel-1)
 
 
 # Installation
@@ -72,10 +86,56 @@ from webelog.belodlis import DlisReader
 reader = DlisReader()
 dlis_file = reader.process_physical_file('path/to/your/file.dlis')
 ```
+### to dataframe 
+To convert the data to a pandas dataframe.
+
+```python
+import pandas as pd
+from webelog.belodlis import DlisReader
+
+reader = DlisReader()
+dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+frame = dlis_file.logical_files[0].get_frame()
+df: pd.DataFrame = frame.data.as_df()
+```
+
+### to csv
+To save the data to a CSV file.
+
+```python
+import pandas as pd
+from webelog.belodlis import DlisReader
+
+reader = DlisReader()
+dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+frame = dlis_file.logical_files[0].get_frame()
+frame.data.to_csv('path/to/your/file.csv')
+
+# NOTE the function returns the path to the file.
+path_to_csv = frame.data.to_csv('path/to/your/file.csv')
+```
+
+### to excel
+To save the data to an Excel file.
+
+```python
+import pandas as pd
+from webelog.belodlis import DlisReader
+
+
+reader = DlisReader()
+dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+frame = dlis_file.logical_files[0].get_frame()
+frame.data.to_excel('path/to/your/file.xlsx')
+
+# NOTE the function returns the path to the file.
+path_to_excel = frame.data.to_excel('path/to/your/file.xlsx')
+```
 
 ### Dlis File Models
 - [Schemas Folder](./wellbelog/belodlis/schemas/)
 We make use of Pydantic to create the models. The PhysicalFileModel is the main model, but we have LogicalFileModel to represent the logical files, FrameModel to represent the frames.
+Here are the main models:
 
 #### PhysicalFileModel
 The main model, that contains all the information about the logical files, logical records, channels, frames, etc.
@@ -118,26 +178,15 @@ class FrameModel(TimeStampedModelSchema):
 
 #### FrameDataframe
 To represent the Dataframe.
-
+The FrameDataframe class extends the DataframeSchema, that has a method to convert the data to a pandas DataFrame.
+And exports the data to a CSV file or to a Excel file.
 ```python
-class FrameDataframe(TimeStampedModelSchema):
+class FrameDataframe(DataframeSchema):
 
     file_name: str = Field(..., description="The name of the file.")
     logical_file_id: str = Field(..., description="The id of the logical file.")
     data: list[dict] = Field(None, description="The dataframe of the file.")
 
-    def as_df(self):
-        """
-        Convert the FrameDataframe to a pandas DataFrame.
-
-        Returns:
-            pd.DataFrame: The pandas DataFrame.
-        """
-
-        try:
-            return pd.DataFrame(self.data)
-        except Exception as e:
-            raise e
 ```
 
 ## Working with Las files
@@ -163,11 +212,56 @@ from webelog.belolas import LasReader
 reader = LasReader()
 las_file = reader.process_las_file('path/to/your/file.las')
 ```
+### Frame data to dataframe
+To convert the data to a pandas dataframe.
+
+```python
+import pandas as pd
+from webelog.belolas import LasReader
+
+reader = LasReader()
+las_file = reader.process_las_file('path/to/your/file.las')
+df: pd.DataFrame = las_file.data.as_df()
+```
+
+### Frame data to csv
+To save the data to a CSV file.
+
+```python
+import pandas as pd
+from webelog.belolas import LasReader
+
+reader = LasReader()
+las_file = reader.process_las_file('path/to/your/file.las')
+las_file.data.to_csv('path/to/your/file.csv')
+
+# NOTE the function returns the path to the file.
+path_to_csv = las_file.data.to_csv('path/to/your/file.csv')
+```
+
+### Frame data to excel
+To save the data to an Excel file.
+
+```python
+import pandas as pd
+from webelog.belolas import LasReader
+
+reader = LasReader()
+las_file = reader.process_las_file('path/to/your/file.las')
+las_file.data.to_excel('path/to/your/file.xlsx')
+
+# NOTE the function returns the path to the file.
+path_to_excel = las_file.data.to_excel('path/to/your/file.xlsx')
+```
 
 ### Las File Models
-- [Schemas Folder](./wellbelog/belolas/schemas/)
+- [Schemas](./wellbelog/belolas/schemas/las.py)
   
 We make use of Pydantic to create the models. The LasFileModel is the main model, but we have SectionModel to represent the sections, CurveModel to represent the curves, etc.
+
+#### LasFileModel
+A class to represent the Las file.
+It contains the file name, the folder name, the specs, the data, and some error handling.
 
 ```python
 class LasFileModel(TimeStampedModelSchema):
@@ -179,14 +273,22 @@ class LasFileModel(TimeStampedModelSchema):
 
     data: Optional[LasDataframe] = Field(None, description="The data of the file.")
 
-    def __str__(self) -> str:
-        return f"LasFileModel: {self.file_name}"
-
     def column_search(self, column: str) -> Optional[LasCurvesSpecs]:
         for spec in self.specs:
             if spec.mnemonic == column:
                 return spec
         return None
+```
+#### LasDataframe
+A class to represent the Dataframe.
+It extends the DataframeSchema, that has a method to convert the data to a pandas DataFrame.
+And exports the data to a CSV file or to a Excel file.
+
+```python
+class LasDataframe(DataframeSchema):
+    file_name: str = Field(..., description="The name of the file.")
+    columns: list[str] = Field(..., description="The columns of the curve.")
+    shape: tuple = Field(..., description="The shape of the curve.")
 ```
 
 ## Working with Lis files
@@ -211,4 +313,46 @@ from webelog.belolas import LisReader
 
 reader = LisReader()
 lis_file = reader.process_physical_file('path/to/your/file.lis')
+```
+
+### Frame data to dataframe
+To convert the data to a pandas dataframe.
+
+```python
+import pandas as pd
+from webelog.belolas import LisReader
+
+reader = LisReader()
+lis_file = reader.process_lis_file('path/to/your/file.lis')
+df: pd.DataFrame = lis_file.logical_files[0].curves_data[0].as_df()
+```
+
+### Frame data to csv
+To save the data to a CSV file.
+
+```python
+import pandas as pd
+from webelog.belolas import LisReader
+
+reader = LisReader()
+lis_file = reader.process_lis_file('path/to/your/file.lis')
+lis_file.logical_files[0].curves_data[0].to_csv('path/to/your/file.csv')
+
+# NOTE the function returns the path to the file.
+path_to_csv = lis_file.logical_files[0].curves_data[0].to_csv('path/to/your/file.csv')
+```
+
+### Frame data to excel
+To save the data to an Excel file.
+
+```python
+import pandas as pd
+from webelog.belolas import LisReader
+
+reader = LisReader()
+lis_file = reader.process_lis_file('path/to/your/file.lis')
+lis_file.logical_files[0].curves_data[0].to_excel('path/to/your/file.xlsx')
+
+# NOTE the function returns the path to the file.
+path_to_excel = lis_file.logical_files[0].curves_data[0].to_excel('path/to/your/file.xlsx')
 ```

@@ -8,7 +8,10 @@ Here are all the code to work with the dlis files.
   - [PhysicalFileModel](#physicalfilemodel)
   - [LogicalFileModel](#logicalfilemodel)
   - [FrameModel](#framemodel)
-  - [FrameDataframe](#framedataframe)
+- [FrameDataframe](#framedataframe)
+  - [as\_df](#as_df)
+  - [to\_csv](#to_csv)
+  - [to\_excel](#to_excel)
 
 
 # Reader
@@ -64,9 +67,9 @@ class FrameModel(TimeStampedModelSchema):
     data: Optional[FrameDataframe] = Field(None, description="The dataframe of the file.")
 ```
 
-## FrameDataframe
+# FrameDataframe
 To represent the Dataframe.
-
+The data is a list of dictionaries.
 ```python
 class FrameDataframe(TimeStampedModelSchema):
 
@@ -74,16 +77,52 @@ class FrameDataframe(TimeStampedModelSchema):
     logical_file_id: str = Field(..., description="The id of the logical file.")
     data: list[dict] = Field(None, description="The dataframe of the file.")
 
-    def as_df(self):
-        """
-        Convert the FrameDataframe to a pandas DataFrame.
-
-        Returns:
-            pd.DataFrame: The pandas DataFrame.
-        """
-
-        try:
-            return pd.DataFrame(self.data)
-        except Exception as e:
-            raise e
 ```
+
+## as_df 
+To convert the data to a pandas dataframe.
+
+```python
+import pandas as pd
+from webelog.belodlis import DlisReader
+
+reader = DlisReader()
+dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+frame = dlis_file.logical_files[0].get_frame()
+df: pd.DataFrame = frame.data.as_df()
+```
+
+## to_csv
+To save the data to a CSV file.
+
+```python
+import pandas as pd
+from webelog.belodlis import DlisReader
+
+reader = DlisReader()
+dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+frame = dlis_file.logical_files[0].get_frame()
+frame.data.to_csv('path/to/your/file.csv')
+
+# NOTE the function returns the path to the file.
+path_to_csv = frame.data.to_csv('path/to/your/file.csv')
+```
+
+## to_excel
+To save the data to an Excel file.
+
+```python
+import pandas as pd
+from webelog.belodlis import DlisReader
+
+
+reader = DlisReader()
+dlis_file = reader.process_physical_file('path/to/your/file.dlis')
+frame = dlis_file.logical_files[0].get_frame()
+frame.data.to_excel('path/to/your/file.xlsx')
+
+# NOTE the function returns the path to the file.
+path_to_excel = frame.data.to_excel('path/to/your/file.xlsx')
+```
+
+

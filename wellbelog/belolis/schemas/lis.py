@@ -1,7 +1,7 @@
 from typing import Any, Union, Optional
 from pydantic import BaseModel, Field
 
-from wellbelog.db.base import TimeStampedModelSchema
+from wellbelog.db.base import TimeStampedModelSchema, DataframeSchema
 
 LOGICAL_FILE_ATTR = [
     'api_curve_class', 'api_curve_type', 'api_log_type',
@@ -10,7 +10,7 @@ LOGICAL_FILE_ATTR = [
 ]
 
 
-class FrameLisCurves(TimeStampedModelSchema):
+class FrameLisCurves(DataframeSchema):
     """
     A class used to represent a BeloDlis object.
 
@@ -23,7 +23,6 @@ class FrameLisCurves(TimeStampedModelSchema):
 
     file_name: str = Field(..., description="The name of the file.")
     logical_file_id: Union[str, int] = Field(..., description="The id of the logical file.")
-    data: Union[list[dict], str] = Field(None, description="The dataframe of the file.")
 
 
 class LisLogicalFileWellSiteSpecDict(BaseModel):
@@ -57,19 +56,19 @@ class LisLogicalFileSpecsDict(BaseModel):
     Represents the specification for a LIS logical file.
     But with more details.
     """
-    api_curve_class: Optional[Union[str, int]] = Field(..., description="API Curve Class")
-    api_curve_type: Optional[Union[str, int]] = Field(..., description="API Curve Type")
-    api_log_type: Optional[Union[str, int]] = Field(..., description="API Log Type")
-    api_modifier: Optional[Union[str, int]] = Field(..., description="API Modifier")
-    filenr: Optional[int] = Field(..., description="File Number")
-    mnemonic: Optional[str] = Field(..., description="Mnemonic")
-    process_level: Optional[int] = Field(..., description="Process Level")
-    reprc: Optional[Union[str, int]] = Field(..., description="Reprocessing")
-    reserved_size: Optional[int] = Field(..., description="Reserved Size")
-    samples: Optional[int] = Field(..., description="Number of Samples")
-    service_id: Optional[Union[str, int]] = Field(..., description="Service ID")
-    service_order_nr: Optional[Union[str, int]] = Field(..., description="Service Order Number")
-    units: Optional[Union[str, int]] = Field(..., description="Units")
+    api_curve_class: Optional[Union[str, int]] = Field(None, description="API Curve Class")
+    api_curve_type: Optional[Union[str, int]] = Field(None, description="API Curve Type")
+    api_log_type: Optional[Union[str, int]] = Field(None, description="API Log Type")
+    api_modifier: Optional[Union[str, int]] = Field(None, description="API Modifier")
+    filenr: Optional[int] = Field(None, description="File Number")
+    mnemonic: Optional[str] = Field(None, description="Mnemonic")
+    process_level: Optional[int] = Field(None, description="Process Level")
+    reprc: Optional[Union[str, int]] = Field(None, description="Reprocessing")
+    reserved_size: Optional[int] = Field(None, description="Reserved Size")
+    samples: Optional[int] = Field(None, description="Number of Samples")
+    service_id: Optional[Union[str, int]] = Field(None, description="Service ID")
+    service_order_nr: Optional[Union[str, int]] = Field(None, description="Service Order Number")
+    units: Optional[Union[str, int]] = Field(None, description="Units")
 
     def simple(self) -> SimpleLisLogicalFileSpec:
         return SimpleLisLogicalFileSpec(
@@ -87,16 +86,24 @@ class LisLogicalSpecs(BaseModel):
 
 class LogicalLisFileModel(TimeStampedModelSchema):
     """
-    A class used to represent a BeloDlis object.
+    Represents a logical LIS file.
+    It can have multiple frames. But generally only one.
 
     Attributes:
         file_name (str): The name of the file.
-        path_reference (str): The reference path
+        logical_id (str): The id of the logical file.
+        curves_data (list[FrameLisCurves]): The frames of the file.
+        error (bool): If the file has any error during opening.
+        error_message (str): The error exception if any.
+        well_site_specs (LisLogicalWellSiteSpec): The well site specifications.
+        specs (list[Any]): The specification of the file.
+        header (str): The header of the file.
     """
 
     file_name: str = Field(..., description="The name of the file.")
     logical_id: Optional[Any] = Field(..., description="The id of the logical file.")
-    curves: list[FrameLisCurves] = Field(default_factory=list, description="The frames of the file.")
+    curves_data: list[FrameLisCurves] = Field(default_factory=list, description="The frames of the file.")
+    curves_names: list[str] = Field(default_factory=list, description="The names of the curves.")
     error: bool = Field(False, description="If the file has any error during opening.")
     error_message: Optional[str] = Field(None, description="The error exception if any.")
     well_site_specs: Optional[LisLogicalWellSiteSpec] = Field(None, description="The well site specifications.")
@@ -105,16 +112,27 @@ class LogicalLisFileModel(TimeStampedModelSchema):
 
     @property
     def frames_count(self) -> int:
-        return len(self.curves)
+        return len(self.curves_data)
+
+    def get_curve(self, index=0) -> FrameLisCurves:
+        assert index < self.frames_count, f"Index {index} is out of range. The file has {self.frames_count} frames."
+        if self.frames_count == 1:
+            return self.curves_data[0]
+        return self.curves_data[index]
 
 
 class PhysicalLisFileModel(TimeStampedModelSchema):
     """
-    A class used to represent a BeloDlis object.
+    Represents a physical LIS file.
+    It can have multiple logical files. And each logical file can have multiple frames, but generally only one.
 
     Attributes:
         file_name (str): The name of the file.
-        logical_files (list[dlis.LogicalFile]): The logical files.
+        folder_name (str): The name of the folder.
+        logical_files (list[LogicalLisFileModel]): The logical files.
+        error_files (list[LogicalLisFileModel]): The error files.
+        error (bool): If the file has any error during opening.
+        error_message (str): The error exception if any.
     """
 
     file_name: str = Field(..., description="The name of the file.")
@@ -127,3 +145,10 @@ class PhysicalLisFileModel(TimeStampedModelSchema):
     @property
     def logical_files_count(self) -> int:
         return len(self.logical_files)
+
+    def get_curves_names(self) -> list[str]:
+        curves = []
+        for logical_file in self.logical_files:
+            for frame in logical_file.curves_data:
+                curves.append(frame.file_name)
+        return curves

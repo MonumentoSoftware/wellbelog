@@ -1,3 +1,4 @@
+import json
 import pathlib
 
 from wellbelog.utils.logging import setup_logger
@@ -67,16 +68,17 @@ class LasReader:
             las_curves_specs = process_curves_items(file)
             las_file_model.specs = las_curves_specs
 
-            las_dataframes = LasDataframe(
-                data=las_data.to_json(orient='records'),
+            las_dataframe = LasDataframe(
+                data=json.loads(las_data.to_json(orient='records')),
                 file_name=file_name,
                 columns=file.keys(),
                 shape=shape_data
             )
-            las_file_model.data = las_dataframes
+            las_file_model.data = las_dataframe
             return las_file_model
 
         except Exception as e:
+            self.logger.error(f'Error while processing LAS file: {e}')
             las_file_model.error = True
             las_file_model.error_message = str(e)
             return las_file_model

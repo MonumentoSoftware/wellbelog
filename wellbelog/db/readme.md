@@ -1,13 +1,12 @@
+# Schemas
 
-from datetime import datetime
-from typing import Union
+We make use of Pydantic to create the models and validate the data.
 
-from bson import ObjectId
-from shapely.geometry import shape
-import pandas as pd
-from pydantic import BaseModel, Field
+# HasIdModel
 
+Basic model with an id.
 
+```python
 class HasIdSchema(BaseModel):
     '''
     Base class for all models that have an id field.
@@ -20,20 +19,27 @@ class HasIdSchema(BaseModel):
     model_config = {
         'arbitrary_types_allowed': True,
     }
+```
 
+# TimeStampedModel
 
+Model with timestamps.
+
+```python
 class TimeStampedModelSchema(HasIdSchema):
-    '''
-    Base class for all models that have a created_at and updated_at fields.
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    Attributes:
-        created_at: datetime: Date and time the model was created.
-        updated_at: datetime: Date and time the model was last updated.
-    '''
-    created_at: datetime = datetime.now()
-    updated_at: datetime = datetime.now()
+    model_config = {
+        'arbitrary_types_allowed': True,
+    }
+```
 
+# GeoJsonSchema
 
+Model for GeoJson.
+
+```python
 class GeoJSONSchema(TimeStampedModelSchema):
     """
     Base class for all models that have a geometry field.
@@ -46,8 +52,13 @@ class GeoJSONSchema(TimeStampedModelSchema):
 
     def as_shape(self):
         return shape(self.geometry)
+```
 
+# DataframeModel
 
+To represent the Dataframe.
+
+```python
 class DataframeSchema(TimeStampedModelSchema):
     """
     Base class for all models that have a dataframe field.
@@ -91,3 +102,4 @@ class DataframeSchema(TimeStampedModelSchema):
         """
         self.as_df().to_excel(path, index=False, **kwargs)
         return path
+```

@@ -1,8 +1,8 @@
 from pathlib import Path
 from wellbelog.belodlis.reader import DlisReader
 
-folder_path = Path(__file__).parent / 'test_files'
-file_path = Path(__file__).parent / 'test_files' / '1PIR1AL_conv_ccl_canhoneio.dlis'
+folder_path = Path(__file__).parent.parent / 'test_files'
+file_path = folder_path / 'test_files' / '1PIR1AL_conv_ccl_canhoneio.dlis'
 
 
 def test_search_files():

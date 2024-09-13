@@ -4,7 +4,7 @@ import pandas as pd
 from pydantic import Field
 from rich.table import Table
 
-from wellbelog.db.base import TimeStampedModelSchema
+from wellbelog.db.base import TimeStampedModelSchema, DataframeSchema
 from wellbelog.utils.console import console
 
 
@@ -26,7 +26,7 @@ ChannelsList = list[FrameChannel]
 """List of FrameChannel objects."""
 
 
-class FrameDataframe(TimeStampedModelSchema):
+class FrameDataframe(DataframeSchema):
     """
     The Dlis frame data.
 
@@ -38,20 +38,6 @@ class FrameDataframe(TimeStampedModelSchema):
 
     file_name: str = Field(..., description="The name of the file.")
     logical_file_id: str = Field(..., description="The id of the logical file.")
-    data: list[dict] = Field(None, description="The dataframe of the file.")
-
-    def as_df(self):
-        """
-        Convert the FrameDataframe to a pandas DataFrame.
-
-        Returns:
-            pd.DataFrame: The pandas DataFrame.
-        """
-
-        try:
-            return pd.DataFrame(self.data)
-        except Exception as e:
-            raise e
 
 
 class FrameModel(TimeStampedModelSchema):
@@ -131,21 +117,10 @@ class LogicalFileModel(TimeStampedModelSchema):
         Get the frame by index.
         In the vast majority of the cases, the file has only one frame.
         """
+        assert not self.error, "The file has an error. Cannot get the frame."
         if self.frames_count == 1:
             return self.frames[0]
         return self.frames[index]
-
-    def to_csv(self, index: int = 0, **kwargs) -> str:
-        """
-        Convert the frame to a csv file.
-        Args:
-            index (int): The index of the frame.
-            **kwargs: The arguments to pass to the pandas to_csv method.
-        Returns:
-            str: The csv file.
-        """
-        assert index < self.frames_count, f"Index {index} out of range. The file has {self.frames_count} frames."
-        return self.get_frame(index).data.as_df().to_csv(**kwargs)
 
     def table_view(self) -> Table:
         """

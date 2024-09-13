@@ -89,7 +89,6 @@ class DlisReader:
 
                     # Process the frame and check for DUMM channels
                     data = FrameProcessor.dlis_curves_to_dataframe(frame)
-
                     # Check if the data is an exception
                     # If it is, set the error flag and the error message
                     if data is Exception:
