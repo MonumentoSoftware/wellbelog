@@ -4,8 +4,8 @@ from typing import Any, Optional
 from pydantic import BaseModel, Field
 from rich.table import Table
 
-from wellbelog.db.base import TimeStampedModelSchema, DataframeSchema
 from wellbelog.utils.console import console
+from wellbelog.db.base_schema import TimeStampedModelSchema, DataframeSchema
 
 
 class LasDataframe(DataframeSchema):

@@ -1,6 +1,7 @@
 from pathlib import Path
-from wellbelog.belodlis.reader import DlisReader
 import tempfile
+
+from wellbelog.belodlis.reader import DlisReader
 
 
 folder_path = Path(__file__).parent.parent / 'test_files'

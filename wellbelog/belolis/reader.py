@@ -1,10 +1,9 @@
-
-
 import json
 import pathlib
+
 from wellbelog.utils.logging import setup_logger
 from .functions import read_lis_file, parse_lis_physical_file, get_curves, get_physical_lis_specs, get_lis_wellsite_components
-from .schemas.lis import (
+from .schemas import (
     FrameLisCurves, LisLogicalFileSpecsDict, LisLogicalFileWellSiteSpecDict,
     PhysicalLisFileModel, LisLogicalWellSiteSpec, LOGICAL_FILE_ATTR,
     LogicalLisFileModel, LisLogicalSpecs

@@ -3,10 +3,10 @@ import pathlib
 
 from dlisio.dlis import Frame
 
-from wellbelog.belodlis.objects_parsers.frame_parser import FrameProcessor
-from wellbelog.belodlis.objects_parsers.logical_file_parser import get_logical_file_summary
 from wellbelog.utils.logging import setup_logger
-from .schemas.dlis import FrameDataframe, LogicalFileModel, PhysicalFileModel
+from .schemas import FrameDataframe, LogicalFileModel, PhysicalFileModel
+from .objects_parsers.logical_file_parser import get_logical_file_summary
+from .objects_parsers.frame_parser import FrameProcessor
 from .functions import open_dlis_file, unpack_physical_dlis
 
 

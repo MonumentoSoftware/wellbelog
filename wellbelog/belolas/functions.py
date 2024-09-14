@@ -1,6 +1,6 @@
 import lasio
 
-from wellbelog.belolas.schemas.las import LasCurvesSpecs
+from wellbelog.belolas.schemas import LasCurvesSpecs
 
 
 def open_las_file(path: str) -> lasio.las.LASFile:

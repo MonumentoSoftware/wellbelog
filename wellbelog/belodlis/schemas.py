@@ -4,8 +4,8 @@ from typing import Any, Union, Optional
 from pydantic import Field
 from rich.table import Table
 
-from wellbelog.db.base import TimeStampedModelSchema, DataframeSchema
 from wellbelog.utils.console import console
+from ..db.base_schema import TimeStampedModelSchema, DataframeSchema
 
 
 class FrameChannel(TimeStampedModelSchema):
