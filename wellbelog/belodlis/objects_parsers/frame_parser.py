@@ -4,7 +4,7 @@ from typing import Union
 from dlisio import dlis
 import pandas as pd
 
-from wellbelog.belodlis.schemas.dlis import ChannelsList, FrameChannel, FrameModel
+from wellbelog.belodlis.schemas import FrameModel, FrameChannel, ChannelsList
 from wellbelog.utils.mnemonicfix import MnemonicFix
 
 

@@ -1,4 +1,4 @@
-# Schemas
+# SQLAlchemy Module# Schemas
 
 We make use of Pydantic to create the models and validate the data.
 
