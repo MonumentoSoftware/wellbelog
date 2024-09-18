@@ -6,7 +6,7 @@ from dlisio.dlis import (
 )
 from rich.console import Console
 
-from wellbelog.belodlis.schemas import LogicalFileSummary
+from wellbelog.schemas.dlis import LogicalFileSummary
 
 
 MetadataObject = Union[Measurement, Parameter, Channel]

@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from rich.table import Table
 
 from wellbelog.utils.console import console
-from wellbelog.db.base_schema import TimeStampedModelSchema, DataframeSchema
+from wellbelog.schemas.base_schema import TimeStampedModelSchema, DataframeSchema
 
 
 class LasDataframe(DataframeSchema):

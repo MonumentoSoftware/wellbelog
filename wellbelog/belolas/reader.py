@@ -2,7 +2,7 @@ import json
 import pathlib
 
 from wellbelog.utils.logging import setup_logger
-from .schemas import LasFileModel, LasDataframe
+from ..schemas.las import LasFileModel, LasDataframe
 from .functions import open_las_file, process_curves_items
 
 

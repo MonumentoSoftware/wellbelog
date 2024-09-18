@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from rich.table import Table
 
 from wellbelog.utils.console import console
-from ..db.base_schema import TimeStampedModelSchema, DataframeSchema
+from wellbelog.schemas.base_schema import TimeStampedModelSchema, DataframeSchema
 
 LOGICAL_FILE_ATTR = [
     'api_curve_class', 'api_curve_type', 'api_log_type',

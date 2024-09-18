@@ -4,10 +4,10 @@ from typing import Callable, Union
 
 from .belodlis.reader import DlisReader
 from .belolas.reader import LasReader
-from .belodlis.schemas import PhysicalFileModel
-from .belolas.schemas import LasFileModel
+from .schemas.dlis import PhysicalFileModel
+from .schemas.las import LasFileModel
 from .belolis.reader import LisReader
-from .belolis.schemas import PhysicalLisFileModel
+from .schemas.lis import PhysicalLisFileModel
 from .utils.logging import setup_logger
 
 ReaderReturnType = Union[PhysicalFileModel, LasFileModel, PhysicalLisFileModel]

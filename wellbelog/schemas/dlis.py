@@ -5,7 +5,7 @@ from pydantic import Field
 from rich.table import Table
 
 from wellbelog.utils.console import console
-from ..db.base_schema import TimeStampedModelSchema, DataframeSchema
+from wellbelog.schemas.base_schema import TimeStampedModelSchema, DataframeSchema
 
 
 class FrameChannel(TimeStampedModelSchema):
