@@ -7,7 +7,7 @@ class MnemonicFix:
     Searches for column values and replaces them.
     """
     @staticmethod
-    def replace_columns_values(df: DataFrame, characters: set, default: str) -> str:
+    def replace_columns_values(df: DataFrame, characters: set, default: str) -> DataFrame:
         """
         Replaces columns values from a given  dataframe, \n
         if it contains a charcter
@@ -89,8 +89,9 @@ class MnemonicFix:
         return df
 
     @staticmethod
-    def strip_column_names(df: DataFrame):
+    def strip_column_names(df: DataFrame) -> DataFrame:
         """Rename cols of dataframe by cleaning whitespace"""
         for col in df.columns.values:
             col: str
             df.rename(columns={col: col.lstrip().rstrip()}, inplace=True)
+        return df

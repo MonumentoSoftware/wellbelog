@@ -3,9 +3,7 @@ from dlisio.dlis import PhysicalFile
 from .sumaries import PhysicalFileSummary
 
 
-def get_physical_file_summary(physical_file: PhysicalFile,
-                              well: str,
-                              file_path: str) -> PhysicalFileSummary:
+def get_physical_file_summary(physical_file: PhysicalFile, well: str, file_path: str) -> PhysicalFileSummary:
     """
     This function transforms the .describe method of the PhisicalFile
     into a list of strings and a dict, made with the values

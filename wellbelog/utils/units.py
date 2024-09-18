@@ -4,9 +4,9 @@ Specially useful whrn working with dataframes.
 """
 
 
-def feet_to_meter(feet) -> float:
-    return float(feet) * 0.3048
+def feet_to_meter(feet, decimals=4) -> float:
+    return round(float(feet) * 0.3048, decimals)
 
 
-def meter_to_feet(meter) -> float:
-    return float(meter) / 0.3048
+def meter_to_feet(meter, decimals=4) -> float:
+    return round(float(meter) / 0.3048, decimals)
