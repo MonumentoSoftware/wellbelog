@@ -18,6 +18,21 @@ class DlisReader:
     def __init__(self) -> None:
         self. logger = setup_logger(__class__.__name__)
 
+    def load_raw(self, path_to_file: str, unpack=False) -> PhysicalFileModel:
+        """
+        Load a DLIS file and return the raw data.
+
+        Args:
+            path_to_file (str): Path to the DLIS file.
+
+        Returns:
+            PhysicalFileModel: The raw data.
+        """
+        file = open_dlis_file(pathlib.Path(path_to_file).absolute())
+        if unpack:
+            return unpack_physical_dlis(file)
+        return file
+
     def search_files(self, path: str) -> list[pathlib.Path]:
         """
         Search for DLIS files in the given path and returns a list with the file paths.

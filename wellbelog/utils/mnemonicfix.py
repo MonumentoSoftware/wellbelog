@@ -1,14 +1,13 @@
 from pandas import DataFrame
 
 
-class ColumnValueFix(object):
+class MnemonicFix:
     """
     Main class for fixing mnemonics.
     Searches for column values and replaces them.
     """
-
-    def replace_columns_values(self, df: DataFrame,
-                               characters: set, default: str) -> str:
+    @staticmethod
+    def replace_columns_values(df: DataFrame, characters: set, default: str) -> str:
         """
         Replaces columns values from a given  dataframe, \n
         if it contains a charcter
@@ -19,9 +18,6 @@ class ColumnValueFix(object):
             if original_chr in df.columns.values:
                 df.rename(columns={original_chr: default}, inplace=True)
         return df
-
-
-class MnemonicFix(ColumnValueFix):
 
     @staticmethod
     def replace_index(string: str) -> str:
