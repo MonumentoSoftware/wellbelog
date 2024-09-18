@@ -27,4 +27,4 @@ jobs:
 
     - name: Run tests
       run: |
-        poetry run pytest  # Or replace with your specific test command
+        poetry run pytest  --cov --cov-report=xml
