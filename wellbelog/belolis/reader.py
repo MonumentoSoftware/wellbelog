@@ -1,5 +1,8 @@
 import json
 import pathlib
+from typing import Union
+
+from dlisio import lis
 
 from wellbelog.utils.logging import setup_logger
 from .functions import read_lis_file, parse_lis_physical_file, get_curves, get_physical_lis_specs, get_lis_wellsite_components
@@ -43,12 +46,28 @@ class LisReader:
             self.logger.error(f'Error while searching for LIS files: {e}')
             return lis_files
 
+    def load_raw(self, path_to_file: str, unpack=False) -> Union[lis.PhysicalFile, list[lis.LogicalFile]]:
+        """
+        Load a LIS file and return the raw data.
+        Optionally, unpack the file and return the logical files.
+
+        Args:
+            path_to_file (str): Path to the LIS file.
+
+        Returns:
+            Union[lis.PhysicalFile, list[lis.LogicalFile]]: The raw data.
+        """
+        file = read_lis_file(path_to_file)
+        if unpack:
+            return parse_lis_physical_file(file)
+        return file
+
     def process_physical_file(self, path_to_file: str, folder_name: str = None) -> PhysicalLisFileModel:
         """
         Read a LIS file and return a list of LogicalFile objects.
 
         Args:
-            path_to_file (str): Path to the LIS file.
+            path_to_file(str): Path to the LIS file.
 
         Returns:
             list[lis.LogicalFile]: List of LogicalFile objects.

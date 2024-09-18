@@ -14,6 +14,18 @@ class LasReader:
     def __init__(self) -> None:
         self.logger = setup_logger(__class__.__name__)
 
+    def load_raw(self, path_to_file: str) -> LasFileModel:
+        """
+        Load a LAS file and return the raw data.
+
+        Args:
+            path_to_file (str): Path to the LAS file.
+
+        Returns:
+            LasFileModel: The raw data.
+        """
+        return open_las_file(path_to_file)
+
     def search_files(self, path: str) -> list[pathlib.Path]:
         """
         Search for LAS files in the given path and returns a list with the file paths.
