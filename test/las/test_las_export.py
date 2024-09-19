@@ -1,6 +1,9 @@
 from pathlib import Path
-from wellbelog.belolas.reader import LasReader
 import tempfile
+
+import pandas as pd
+
+from wellbelog.belolas.reader import LasReader
 
 
 folder_path = Path(__file__).parent.parent / 'test_files'
@@ -17,6 +20,7 @@ def test_exports():
     assert las_data is not None
 
     las_file_columns = las_data.columns
+    assert isinstance(las_data.as_df(), pd.DataFrame)
     with tempfile.TemporaryDirectory() as temp_dir:
 
         csv_path = Path(temp_dir) / 'test.csv'

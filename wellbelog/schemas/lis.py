@@ -1,3 +1,4 @@
+from functools import cached_property
 from typing import Any, Union, Optional
 
 from pydantic import BaseModel, Field
@@ -117,7 +118,7 @@ class LogicalLisFileModel(TimeStampedModelSchema):
     def frames_count(self) -> int:
         return len(self.frames)
 
-    def get_curve(self, index=0) -> FrameLisCurves:
+    def get_frame(self, index=0) -> FrameLisCurves:
         assert index < self.frames_count, f"Index {index} is out of range. The file has {self.frames_count} frames."
         if self.frames_count == 1:
             return self.frames[0]
@@ -129,7 +130,7 @@ class LogicalLisFileModel(TimeStampedModelSchema):
         """
         table = Table(title=self.file_name)
         table.add_column("Logical File ID", style="cyan")
-        table.add_column("Frame count", style="magenta")
+        table.add_column("Frames", style="magenta")
         table.add_column("Curves", style="green")
         table.add_column("Error", style="red")
         table.add_row(str(self.logical_id), str(self.frames_count), str(self.curves_names), str(self.error))
@@ -162,12 +163,15 @@ class PhysicalLisFileModel(TimeStampedModelSchema):
     def logical_files_count(self) -> int:
         return len(self.logical_files)
 
-    def get_curves_names(self) -> list[str]:
-        curves = []
-        for logical_file in self.logical_files:
-            for frame in logical_file.frames:
-                curves.append(frame.file_name)
-        return curves
+    @cached_property
+    def curves_names(self) -> list[str]:
+        """
+        Get the names of the curves in the file.
+
+        Returns:
+            list[str]: The names of the curves.
+        """
+        return [curve for file in self.logical_files for curve in file.curves_names]
 
     def logical_files_table(self) -> Table:
         """

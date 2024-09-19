@@ -17,7 +17,7 @@ def open_dlis_file(file_path: str) -> dlis.PhysicalFile:
         return dlis.load(file_path)
 
     except Exception as e:
-        raise e
+        return e
 
 
 def unpack_physical_dlis(ph_file: dlis.PhysicalFile) -> list[dlis.LogicalFile]:

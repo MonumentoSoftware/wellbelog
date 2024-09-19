@@ -61,7 +61,16 @@ class LasFileModel(TimeStampedModelSchema):
     def __str__(self) -> str:
         return f"LasFileModel: {self.file_name}"
 
-    def column_search(self, column: str) -> Optional[LasCurvesSpecs]:
+    def get_curve(self, column: str) -> Optional[LasCurvesSpecs]:
+        """
+        Get the curve by the column name.
+        If the column is not found, return None.
+        Args:
+            column (str): The column name.
+
+        Returns:
+            Optional[LasCurvesSpecs]: The curve.
+        """
         for spec in self.specs:
             if spec.mnemonic == column:
                 return spec
