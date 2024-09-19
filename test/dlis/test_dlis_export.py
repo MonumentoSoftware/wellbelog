@@ -13,7 +13,7 @@ def test_exports():
     physical_file = dlis_processor.process_physical_file(file_path)
     assert physical_file.file_name == '1PIR1AL_conv_ccl_canhoneio.dlis'
 
-    file_curves = physical_file.curves_names()
+    file_curves = physical_file.curves_names
     # Getting the first curve
     frame = physical_file.logical_files[0].get_frame()
     assert frame is not None

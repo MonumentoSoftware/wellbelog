@@ -184,6 +184,7 @@ class PhysicalFileModel(TimeStampedModelSchema):
         console.print(table)
         return table
 
+    @cached_property
     def curves_names(self) -> list[str]:
         """"
         Returns a set with the names of the curves in the file.

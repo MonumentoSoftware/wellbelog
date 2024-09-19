@@ -1,5 +1,6 @@
 import json
 import pathlib
+from typing import Optional
 
 from dlisio.dlis import Frame
 
@@ -33,7 +34,7 @@ class DlisReader:
             return unpack_physical_dlis(file)
         return file
 
-    def search_files(self, path: str) -> list[pathlib.Path]:
+    def search_files(self, path: str) -> Optional[list[pathlib.Path]]:
         """
         Search for DLIS files in the given path and returns a list with the file paths.
 
@@ -47,7 +48,7 @@ class DlisReader:
             return dlis_files
         except Exception as e:
             self.logger.error(f'Error while searching for DLIS files: {e}')
-            return dlis_files
+            return None
 
     def process_physical_file(self, path: str, folder_name: str = None) -> PhysicalFileModel:
         """
