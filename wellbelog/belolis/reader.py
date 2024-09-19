@@ -58,6 +58,9 @@ class LisReader:
             Union[lis.PhysicalFile, list[lis.LogicalFile]]: The raw data.
         """
         file = read_lis_file(path_to_file)
+        if isinstance(file, Exception):
+            self.logger.error(f'Error while opening the LIS file: {file}')
+            raise file
         if unpack:
             return parse_lis_physical_file(file)
         return file

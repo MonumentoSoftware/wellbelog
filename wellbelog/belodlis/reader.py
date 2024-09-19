@@ -30,6 +30,9 @@ class DlisReader:
             PhysicalFileModel: The raw data.
         """
         file = open_dlis_file(pathlib.Path(path_to_file).absolute())
+        if isinstance(file, Exception):
+            self.logger.error(f'Error while opening the DLIS file: {file}')
+            raise file
         if unpack:
             return unpack_physical_dlis(file)
         return file
@@ -63,23 +66,22 @@ class DlisReader:
         self.logger.info(f'Processing the file: {file_name}')
         # XXX Create a PhysicalFileModel object
         physical = PhysicalFileModel(file_name=file_name, logical_files=[], folder_name=folder_name)
+        # Open the DLIS file or raise an exception
+        file = open_dlis_file(pathlib.Path(path).absolute())
+        if isinstance(file, Exception):
+            self.logger.error(f'Error while opening the DLIS file: {file}')
+            physical.error = True
+            physical.error_message = file.__str__()
+            return physical
 
-        # NOTE This is to be used on a batch processing
-        try:
-            # Open the DLIS file or raise an exception
-            file = open_dlis_file(pathlib.Path(path).absolute())
-            logical_files = unpack_physical_dlis(file)
-
-            # Process each logical file
-            for file in logical_files:
-
+        logical_files = unpack_physical_dlis(file)
+        # Process each logical file
+        for file in logical_files:
+            logical_file = LogicalFileModel(file_name=file_name, frames=[])
+            try:
+                logical_file.logical_id = file.fileheader.id
+                logical_file.summary = get_logical_file_summary(file)
                 frames: list[Frame] = file.find('FRAME')
-                logical_file = LogicalFileModel(
-                    file_name=file_name,
-                    logical_id=file.fileheader.id,
-                    summary=get_logical_file_summary(file),
-                    frames=[]
-                )
 
                 # If there are no frames, set the error flag and the error message
                 if not frames:
@@ -108,6 +110,7 @@ class DlisReader:
                     # Check if the data is an exception
                     # If it is, set the error flag and the error message
                     if data is Exception:
+                        self.logger.error(f'Error while processing the frame: {data}')
                         frame_model.error = True
                         frame_model.error_message = data.__str__()
                         logical_file.error = True
@@ -129,10 +132,11 @@ class DlisReader:
                 # Append the logical file to the physical file
                 physical.logical_files.append(logical_file)
 
-            return physical
+                return physical
 
-        except Exception as e:
-            self.logger.error(f'Error while processing the physical file: {e}')
-            physical.error = True
-            physical.error_message = str(e)
-            return physical
+            except Exception as e:
+                self.logger.error(f'Error while processing the logical file: {e}')
+                logical_file.error = True
+                logical_file.error_message = e.__str__()
+                physical.error_files.append(logical_file)
+                continue

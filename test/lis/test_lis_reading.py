@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from dlisio import lis
 
 from wellbelog.belolis.reader import LisReader
@@ -37,6 +38,12 @@ def test_raw_reading():
     reader = LisReader()
     raw = reader.load_raw(file_path)
     assert isinstance(raw, lis.PhysicalFile)
+
+
+def test_raw_reading_error():
+    with pytest.raises(Exception):
+        reader = LisReader()
+        reader.load_raw(error_file_path)
 
 
 def test_raw_unpacking():

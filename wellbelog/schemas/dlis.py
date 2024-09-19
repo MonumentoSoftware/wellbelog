@@ -102,8 +102,8 @@ class LogicalFileModel(TimeStampedModelSchema):
     """
 
     file_name: str = Field(..., description="The name of the file.")
-    logical_id: Any = Field(..., description="The id of the logical file.")
-    summary: LogicalFileSummary = Field(..., description="The summary of the file.")
+    logical_id: Optional[Any] = Field(None, description="The id of the logical file.")
+    summary: Optional[LogicalFileSummary] = Field(None, description="The summary of the file.")
     frames: list[FrameModel] = Field(None, description="The frames of the file.")
     error: bool = Field(False, description="If the file has any error during opening.")
     error_message: Optional[str] = Field(None, description="The error exception if any.")

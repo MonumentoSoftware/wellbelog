@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from dlisio import dlis
+import pytest
 
 from wellbelog.belodlis.reader import DlisReader
 
@@ -13,7 +14,7 @@ def test_search_files():
     dlis_processor = DlisReader()
     dlis_files = dlis_processor.search_files(folder_path)
     assert len(dlis_files) == 2
-    assert dlis_files[0].name == '1PIR1AL_conv_ccl_canhoneio.dlis'
+    assert '1PIR1AL_conv_ccl_canhoneio.dlis' and '1PIR1AL_conv_ccl_canhoneio-error.dlis' in [file.name for file in dlis_files]
 
     # Testing the search_files method with a wrong path
     dlis_files = dlis_processor.search_files(folder_path / 'wrong_path')
@@ -39,6 +40,12 @@ def test_raw_read():
     dlis_processor = DlisReader()
     raw = dlis_processor.load_raw(file_path)
     assert isinstance(raw, dlis.PhysicalFile)
+
+
+def test_raw_read_error():
+    with pytest.raises(Exception):
+        dlis_processor = DlisReader()
+        dlis_processor.load_raw(error_file_path)
 
 
 def load_raw_unpack():
